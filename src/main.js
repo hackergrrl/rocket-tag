@@ -11,7 +11,8 @@ var cocos  = require('cocos2d')   // Import the cocos2d module
 var Layer    = nodes.Layer
   , Scene    = nodes.Scene
   , Label    = nodes.Label
-  , Director = cocos.Director;
+  , Director = cocos.Director
+  , Player   = require('/Player')
 
 /**
  * @class Initial application layer
@@ -21,32 +22,16 @@ function Uwgdc () {
     // You must always call the super class constructor
     Uwgdc.superclass.constructor.call(this);
 
-    var s = Director.sharedDirector.winSize;
+    // Get director singleton
+    var director = Director.sharedDirector;
 
-    var label = new Label({ string:   'Let\'s Make a Game in an Hour!',
-                          fontName: 'Arial',
-                          fontSize: 40
-                          });
-    label.position = ccp(s.width / 2, s.height / 2 + 100)
-    this.addChild(label)
-
-    var label2 = new Label({ string:   'Coming soon!',
-                          fontName: 'Arial',
-                          fontSize: 40
-                          });
-    label2.position = ccp(s.width / 2, s.height / 2 - 100)
-    this.addChild(label2)
-
-    label2.runAction( new cocos.actions.RepeatForever(
-        new cocos.actions.Sequence({ actions: [
-            new cocos.actions.RotateBy({ angle: 360, duration: 1 }),
-            new cocos.actions.DelayTime({ duration: 1 })
-        ]})
-    ));
+    this.player = new Player();
+    this.addChild(this.player);
+    this.player.position = ccp(director.winSize.width/2, director.winSize.height/2);
 }
 
 // Inherit from cocos.nodes.Layer
-Uwgdc.inherit(Layer)
+Uwgdc.inherit(Layer);
 
 /**
  * Entry point for the application
@@ -55,24 +40,24 @@ function main () {
     // Initialise application
 
     // Get director singleton
-    var director = Director.sharedDirector
+    var director = Director.sharedDirector;
 
     // Wait for the director to finish preloading our assets
     events.addListener(director, 'ready', function (director) {
         // Create a scene and layer
-        var scene = new Scene()
-          , layer = new Uwgdc()
+        var scene = new Scene(),
+            layer = new Uwgdc();
 
         // Add our layer to the scene
-        scene.addChild(layer)
+        scene.addChild(layer);
 
         // Run the scene
-        director.replaceScene(scene)
-    })
+        director.replaceScene(scene);
+    });
 
     // Preload our assets
-    director.runPreloadScene()
+    director.runPreloadScene();
 }
 
+exports.main = main;
 
-exports.main = main
