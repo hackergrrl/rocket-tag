@@ -22,6 +22,9 @@ function Uwgdc () {
     // You must always call the super class constructor
     Uwgdc.superclass.constructor.call(this);
 
+    // Listen for keyboard input.
+    this.isKeyboardEnabled = true;
+
     // Get director singleton
     var director = Director.sharedDirector;
 
@@ -31,7 +34,18 @@ function Uwgdc () {
 }
 
 // Inherit from cocos.nodes.Layer
-Uwgdc.inherit(Layer);
+Uwgdc.inherit(Layer, {
+
+    keyDown: function(evt) {
+        var key = evt.keyCode;
+        this.player.keyDown(key);
+    },
+
+    keyUp: function(evt) {
+        var key = evt.keyCode;
+        this.player.keyUp(key);
+    }
+});
 
 /**
  * Entry point for the application

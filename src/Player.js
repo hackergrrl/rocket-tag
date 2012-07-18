@@ -30,12 +30,14 @@ function Player() {
     this.scale = 1.5;
 
     this.velocity = ccp(0,0);
+
+    this.scheduleUpdate();
 }
 
 Player.inherit(nodes.Node, {
 
-    moveSpeed: 5.0,
-    turnSpeed: 3.0,
+    moveSpeed: 12.0,
+    turnSpeed: 130.0,
 
     keys: {
         UP   : false,
@@ -45,42 +47,70 @@ Player.inherit(nodes.Node, {
     },
 
     keyDown: function(key) {
-        if(key == 87) {  // W
+        if(key == 38) {
             this.keys.UP = true;
-        } else if(key == 65) { // A
+        } else if(key == 37) {
             this.keys.LEFT = true;
-        } else if(key == 83) { // S
+        } else if(key == 40) {
             this.keys.DOWN = true;
-        } else if(key == 68) { // D
+        } else if(key == 39) {
             this.keys.RIGHT = true;
         }
     },
 
     keyUp: function(key) {
-        if(key == 87) {  // W
+        if(key == 38) {
             this.keys.UP = false;
-        } else if(key == 65) { // A
+        } else if(key == 37) {
             this.keys.LEFT = false;
-        } else if(key == 83) { // S
+        } else if(key == 40) {
             this.keys.DOWN = false;
-        } else if(key == 68) { // D
+        } else if(key == 39) {
             this.keys.RIGHT = false;
         }
     },
 
     update: function(dt) {
 
+        // Apply forward velocity.
         if(this.keys.UP) {
-            var rotInRadians = this.rotation * (Math.PI / 180.0);
-            var impulse = ccp( Math.cos(rotInRadians) * this.moveSpeed,
-                               Math.sin(rotInRadians) * this.moveSpeed );
+            var rotInRadians = (-this.rotation + 90) * (Math.PI / 180.0);
+            var impulse = ccp( Math.cos(rotInRadians) * this.moveSpeed * dt,
+                               Math.sin(rotInRadians) * this.moveSpeed * dt );
             this.velocity = geo.ccpAdd(this.velocity, impulse);
         }
+
+        // Turn right or left.
         if(this.keys.RIGHT) {
-            this.rotation += this.rotationSpeed;
+            this.rotation += this.turnSpeed * dt;
         }
         if(this.keys.LEFT) {
-            this.rotation -= this.rotationSpeed;
+            this.rotation -= this.turnSpeed * dt;
+        }
+
+        // Simulate air drag.
+        this.velocity.x *= 0.99;
+        this.velocity.y *= 0.99;
+
+        // Apply graivty.
+        this.velocity.y -= 6 * dt;
+
+        // Apply velocity to position.
+        this.position = geo.ccpAdd(this.position, this.velocity);
+
+        // Wrap-around of player position.
+        var size = Director.sharedDirector.winSize;
+        if(this.position.y > size.height) {
+            this.position.y = 0;
+        }
+        if(this.position.y < 0) {
+            this.position.y = size.height;
+        }
+        if(this.position.x > size.width) {
+            this.position.x = 0;
+        }
+        if(this.position.x < 0) {
+            this.position.x = size.width;
         }
     }
 });
