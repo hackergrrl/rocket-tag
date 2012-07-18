@@ -13,6 +13,7 @@ var Layer    = nodes.Layer
   , Label    = nodes.Label
   , Director = cocos.Director
   , Player   = require('/Player')
+  , GameConnection = require('/Connection')
 
 /**
  * @class Initial application layer
