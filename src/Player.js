@@ -27,7 +27,7 @@ function Player() {
     });
     this.addChild(this.sprite);
 
-    this.scale = 1.5;
+    this.scale = 1.25;
     this.lastFrameChange = 0;
 
     this.velocity = ccp(0,0);

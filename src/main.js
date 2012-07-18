@@ -28,6 +28,13 @@ function Uwgdc () {
     // Get director singleton
     var director = Director.sharedDirector;
 
+    // Draw the background.
+    var bg = new nodes.Sprite({
+        file: '/resources/bg.png'
+    });
+    bg.anchorPoint = ccp(0,0);
+    this.addChild(bg);
+
     this.player = new Player();
     this.addChild(this.player);
     this.player.position = ccp(director.winSize.width/2, director.winSize.height/2);
