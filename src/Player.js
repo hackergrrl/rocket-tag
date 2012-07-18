@@ -28,8 +28,10 @@ function Player() {
     this.addChild(this.sprite);
 
     this.scale = 1.5;
+    this.lastFrameChange = 0;
 
     this.velocity = ccp(0,0);
+
 
     this.scheduleUpdate();
 }
@@ -37,7 +39,9 @@ function Player() {
 Player.inherit(nodes.Node, {
 
     moveSpeed: 12.0,
-    turnSpeed: 130.0,
+    turnSpeed: 90.0,
+
+    animationFrame: 0,
 
     keys: {
         UP   : false,
@@ -70,6 +74,15 @@ Player.inherit(nodes.Node, {
         }
     },
 
+    setFrame: function(frame) {
+        this.animationFrame = frame;
+
+        this.sprite.displayFrame = new cocos.SpriteFrame({
+            texture: this.sprite.textureAtlas.texture,
+            rect: new geo.Rect(32*this.animationFrame,0, 32,32)
+        });
+    },
+
     update: function(dt) {
 
         // Apply forward velocity.
@@ -93,7 +106,7 @@ Player.inherit(nodes.Node, {
         this.velocity.y *= 0.99;
 
         // Apply graivty.
-        this.velocity.y -= 6 * dt;
+        this.velocity.y -= 7.5 * dt;
 
         // Apply velocity to position.
         this.position = geo.ccpAdd(this.position, this.velocity);
@@ -111,6 +124,22 @@ Player.inherit(nodes.Node, {
         }
         if(this.position.x < 0) {
             this.position.x = size.width;
+        }
+
+        // Animate over time if pressing the UP key.
+        if(this.keys.UP) {
+            this.lastFrameChange += dt;
+            if(this.lastFrameChange > 0.1) {
+                this.animationFrame++;
+                if(this.animationFrame > 2) {
+                    this.animationFrame = 1;
+                }
+                this.setFrame( this.animationFrame );
+                this.lastFrameChange = 0;
+            }
+        } else {
+            this.setFrame(0);
+            this.lastFrameChange = 0;
         }
     }
 });
