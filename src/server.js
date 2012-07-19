@@ -80,7 +80,7 @@ http.createServer(function (request, response) {
     console.log('Request: ' + JSON.stringify(request.url, null, 4));
     var filePath = '../build' + request.url;
     if (filePath == './')
-        filePath = './index.htm';
+        filePath = './index.html';
     var extname = path.extname(filePath);
     var contentType = 'text/html';
     switch (extname) {

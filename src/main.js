@@ -40,16 +40,11 @@ function Uwgdc () {
     bg.anchorPoint = ccp(0,0);
     this.addChild(bg);
 
-    // TEMP: Create the local player.
-    this.player = new Player();
-    this.addChild(this.player);
-    this.player.position = ccp(director.winSize.width/2, director.winSize.height/2);
-
     // For future reference in connection callbacks.
     var layer = this;
 
     // Connect to the game server.
-    var connection = new Connection('localhost:8081');
+    var connection = new Connection('http://localhost:8081');
 
     // When a player joins..
     connection.onPlayerAdded = function(id, isLocal) {
@@ -83,6 +78,11 @@ function Uwgdc () {
             player.rotation = rot;
         }
     };
+
+    this.connection = connection;
+    this.playerUpdateAccum = 0;
+
+    this.scheduleUpdate();
 }
 
 // Inherit from cocos.nodes.Layer
@@ -96,6 +96,17 @@ Uwgdc.inherit(Layer, {
     keyUp: function(evt) {
         var key = evt.keyCode;
         this.player.keyUp(key);
+    },
+
+    update: function(dt) {
+
+        this.playerUpdateAccum += dt;
+
+        if(this.playerUpdateAccum > 0.5 && this.player) {
+            this.connection.sendPlayerStatus(this.player);
+
+            this.playerUpdateAccum = 0;
+        }
     }
 });
 

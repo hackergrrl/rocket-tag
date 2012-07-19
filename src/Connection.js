@@ -36,8 +36,8 @@ function Connection(address) {
 
     // Update multiple players' physics state.
     this.socket.on('updatePlayers', function (data) {
-        for(var index in data.props) {
-            var elm = data.props[index];
+        for(var index in data.players) {
+            var elm = data.players[index];
             that.onPlayerMoved(elm.networkID, ccp(elm.pos[0],elm.pos[1]), ccp(elm.vel[0],elm.vel[1]), elm.rot);
         }
     });

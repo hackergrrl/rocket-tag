@@ -30,8 +30,9 @@ function Player() {
     this.scale = 1.25;
     this.lastFrameChange = 0;
 
-    this.velocity = ccp(0,0);
+    this.position = ccp( Math.random()*800, Math.random()*600 );
 
+    this.velocity = ccp(0,0);
 
     this.scheduleUpdate();
 }
