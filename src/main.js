@@ -13,7 +13,11 @@ var Layer    = nodes.Layer
   , Label    = nodes.Label
   , Director = cocos.Director
   , Player   = require('/Player')
-  , GameConnection = require('/Connection')
+  , Connection = require('/Connection')
+
+
+var players = {};
+
 
 /**
  * @class Initial application layer
@@ -29,16 +33,56 @@ function Uwgdc () {
     // Get director singleton
     var director = Director.sharedDirector;
 
-    // Draw the background.
+    // Add the background.
     var bg = new nodes.Sprite({
         file: '/resources/bg.png'
     });
     bg.anchorPoint = ccp(0,0);
     this.addChild(bg);
 
+    // TEMP: Create the local player.
     this.player = new Player();
     this.addChild(this.player);
     this.player.position = ccp(director.winSize.width/2, director.winSize.height/2);
+
+    // For future reference in connection callbacks.
+    var layer = this;
+
+    // Connect to the game server.
+    var connection = new Connection('localhost:8081');
+
+    // When a player joins..
+    connection.onPlayerAdded = function(id, isLocal) {
+
+        var player = new Player();
+        layer.addChild(player);
+
+        players[id] = player;
+
+        if(isLocal) {
+            layer.player = player;
+        }
+    };
+
+    // When a player leaves..
+    connection.onPlayerRemoved = function(id) {
+
+        var player = players[id];
+        if(player) {
+            layer.removeChild(player);
+        }
+    };
+
+    // When a player moves..
+    connection.onPlayerMoved = function(id, pos, vel, rot) {
+
+        var player = players[id];
+        if(player) {
+            player.position = pos;
+            player.velocity = vel;
+            player.rotation = rot;
+        }
+    };
 }
 
 // Inherit from cocos.nodes.Layer
