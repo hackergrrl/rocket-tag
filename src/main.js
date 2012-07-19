@@ -72,14 +72,29 @@ function Uwgdc () {
     };
 
     // When a player moves..
-    connection.onPlayerMoved = function(id, pos, vel, acc, rot) {
+    connection.onPlayerMoved = function(id, pos, vel, acc, rot, tagged) {
 
         var player = players[id];
         if(player) {
-            player.position = pos;
-            player.velocity = vel;
-            player.acceleration = acc;
-            player.rotation = rot;
+            if(player !== layer.player) {
+                player.position = pos;
+                player.velocity = vel;
+                player.acceleration = acc;
+                player.rotation = rot;
+            }
+
+            if(tagged) {
+                console.log('tagged');
+                player.sprite.textureAtlas = new cocos.TextureAtlas({
+                    file: '/resources/plr_tagged.png'
+                });
+            } else {
+                console.log('not tagged');
+                player.sprite.textureAtlas = new cocos.TextureAtlas({
+                    file: '/resources/plr_normal.png'
+                });
+            }
+
         }
     };
 

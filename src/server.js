@@ -9,23 +9,25 @@ console.log('Game sockets server running on port 8081');
 // World data.
 var playerCount = 0;
 var players = {};
+var tagged = null;
 
 // Send player status updates periodically.
 setInterval( function() {
     io.sockets.clients().forEach( function(socket) {
         var data = { players: [] };
         for(var networkID in players) {
-            if(networkID != socket.player.networkID) {
+            //if(networkID != socket.player.networkID) {
                 var player = players[networkID];
                 var elm = {
-                    'networkID': networkID,
-                    'pos': player.pos,
-                    'rot': player.rot,
-                    'vel': player.vel,
-                    'acc': player.acc
+                    networkID: networkID,
+                    pos: player.pos,
+                    rot: player.rot,
+                    vel: player.vel,
+                    acc: player.acc,
+                    tagged: (tagged === player)
                 };
                 data.players.push(elm);
-            }
+            //}
         }
         socket.emit('updatePlayers', data);
     });
@@ -41,6 +43,12 @@ io.sockets.on('connection', function (socket) {
                };
     socket.player = player;
     players[player.networkID] = player;
+
+    // This player is tagged if there is no other tagged player.
+    if(!tagged) {
+        tagged = player;
+    }
+
     var data = {
                  'networkID': player.networkID,
                  'pos': player.pos,
@@ -68,11 +76,22 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function() {
+        // Is the disconnecting player tagged?
+        var chooseNewTagged = (tagged === socket.player);
+        if(chooseNewTagged) {
+            tagged = null;
+        }
+
         // Inform the other players of this player's removal.
         console.log(socket.player.networkID + " has disconnected.");
         var data = { 'networkID': socket.player.networkID };
         socket.broadcast.emit('removePlayer', data);
         delete players[socket.player.networkID];
+
+        // Pick a new player to be tagged, if this one is presently tagged.
+        if(chooseNewTagged && players.length > 0) {
+            tagged = players[ Math.floor(Math.random() * players.length) ];
+        }
     });
 });
 

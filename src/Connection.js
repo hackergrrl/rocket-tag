@@ -42,7 +42,8 @@ function Connection(address) {
                                ccp(elm.pos[0],elm.pos[1]),
                                ccp(elm.vel[0],elm.vel[1]),
                                ccp(elm.acc[0],elm.acc[1]),
-                               elm.rot);
+                               elm.rot,
+                               elm.tagged);
         }
     });
 
