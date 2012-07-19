@@ -21,14 +21,15 @@ setInterval( function() {
                     'networkID': networkID,
                     'pos': player.pos,
                     'rot': player.rot,
-                    'vel': player.vel
+                    'vel': player.vel,
+                    'acc': player.acc
                 };
                 data.players.push(elm);
             }
         }
         socket.emit('updatePlayers', data);
     });
-}, 500);
+}, 200);
 
 io.sockets.on('connection', function (socket) {
 
@@ -63,6 +64,7 @@ io.sockets.on('connection', function (socket) {
         socket.player.pos = data.pos;
         socket.player.rot = data.rot;
         socket.player.vel = data.vel;
+        socket.player.acc = data.acc;
     });
 
     socket.on('disconnect', function() {

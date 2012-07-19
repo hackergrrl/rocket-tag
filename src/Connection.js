@@ -38,7 +38,11 @@ function Connection(address) {
     this.socket.on('updatePlayers', function (data) {
         for(var index in data.players) {
             var elm = data.players[index];
-            that.onPlayerMoved(elm.networkID, ccp(elm.pos[0],elm.pos[1]), ccp(elm.vel[0],elm.vel[1]), elm.rot);
+            that.onPlayerMoved(elm.networkID,
+                               ccp(elm.pos[0],elm.pos[1]),
+                               ccp(elm.vel[0],elm.vel[1]),
+                               ccp(elm.acc[0],elm.acc[1]),
+                               elm.rot);
         }
     });
 
@@ -46,12 +50,15 @@ function Connection(address) {
         console.log('sending update..');
         var pos = [ parseFloat(player.position.x.toFixed()),
                     parseFloat(player.position.y.toFixed()) ];
-        var vel = [ parseFloat(player.velocity.x.toFixed(4)),
-                    parseFloat(player.velocity.y.toFixed(4)) ];
+        var vel = [ parseFloat(player.velocity.x.toFixed(6)),
+                    parseFloat(player.velocity.y.toFixed(6)) ];
+        var acc = [ parseFloat(player.acceleration.x.toFixed(6)),
+                    parseFloat(player.acceleration.y.toFixed(6)) ];
         var data = {
               'pos': pos,
               'rot': player.rotation,
-              'vel': vel
+              'vel': vel,
+              'acc': acc
               };
         that.socket.emit('updatePlayerStatus', data);
     };

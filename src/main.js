@@ -54,6 +54,9 @@ function Uwgdc () {
 
         players[id] = player;
 
+        player.isLocal = isLocal;
+        player.networkID = id;
+
         if(isLocal) {
             layer.player = player;
         }
@@ -69,12 +72,13 @@ function Uwgdc () {
     };
 
     // When a player moves..
-    connection.onPlayerMoved = function(id, pos, vel, rot) {
+    connection.onPlayerMoved = function(id, pos, vel, acc, rot) {
 
         var player = players[id];
         if(player) {
             player.position = pos;
             player.velocity = vel;
+            player.acceleration = acc;
             player.rotation = rot;
         }
     };
@@ -102,7 +106,7 @@ Uwgdc.inherit(Layer, {
 
         this.playerUpdateAccum += dt;
 
-        if(this.playerUpdateAccum > 0.5 && this.player) {
+        if(this.playerUpdateAccum > 0.2 && this.player) {
             this.connection.sendPlayerStatus(this.player);
 
             this.playerUpdateAccum = 0;

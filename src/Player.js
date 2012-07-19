@@ -32,7 +32,15 @@ function Player() {
 
     this.position = ccp( Math.random()*800, Math.random()*600 );
 
+    this.keys = {
+        UP   : false,
+        RIGHT: false,
+        DOWN : false,
+        LEFT : false
+    };
+
     this.velocity = ccp(0,0);
+    this.acceleration = ccp(0,0);
 
     this.scheduleUpdate();
 }
@@ -43,13 +51,6 @@ Player.inherit(nodes.Node, {
     turnSpeed: 90.0,
 
     animationFrame: 0,
-
-    keys: {
-        UP   : false,
-        RIGHT: false,
-        DOWN : false,
-        LEFT : false
-    },
 
     keyDown: function(key) {
         if(key == 38) {
@@ -86,12 +87,17 @@ Player.inherit(nodes.Node, {
 
     update: function(dt) {
 
-        // Apply forward velocity.
+        // Reset acceleration on local player.
+        if(this.isLocal) {
+            this.acceleration = ccp(0,0);
+        }
+
+        // Apply forward force..
         if(this.keys.UP) {
             var rotInRadians = (-this.rotation + 90) * (Math.PI / 180.0);
-            var impulse = ccp( Math.cos(rotInRadians) * this.moveSpeed * dt,
-                               Math.sin(rotInRadians) * this.moveSpeed * dt );
-            this.velocity = geo.ccpAdd(this.velocity, impulse);
+            var force = ccp( Math.cos(rotInRadians) * this.moveSpeed * dt,
+                             Math.sin(rotInRadians) * this.moveSpeed * dt );
+            this.acceleration = geo.ccpAdd(this.acceleration, force);
         }
 
         // Turn right or left.
@@ -102,12 +108,17 @@ Player.inherit(nodes.Node, {
             this.rotation -= this.turnSpeed * dt;
         }
 
+        // Apply gravity.
+        if(this.isLocal) {
+        this.acceleration.y -= 7.5 * dt;
+        }
+
+        // Apply acceleration to velocity.
+        this.velocity = geo.ccpAdd(this.velocity, this.acceleration);
+
         // Simulate air drag.
         this.velocity.x *= 0.99;
         this.velocity.y *= 0.99;
-
-        // Apply graivty.
-        this.velocity.y -= 7.5 * dt;
 
         // Apply velocity to position.
         this.position = geo.ccpAdd(this.position, this.velocity);
