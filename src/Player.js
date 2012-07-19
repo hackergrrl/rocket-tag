@@ -41,14 +41,19 @@ function Player() {
 
     this.velocity = ccp(0,0);
     this.acceleration = ccp(0,0);
+    this.fuel = 60;
 
     this.scheduleUpdate();
 }
 
 Player.inherit(nodes.Node, {
 
-    moveSpeed: 12.0,
+    moveSpeed: 4.0,
     turnSpeed: 90.0,
+    maxSpeed:  5.0,
+    airDrag:   0.995,
+    maxFuel:   60,
+    fuelRegen: 0.25,
 
     animationFrame: 0,
 
@@ -93,11 +98,17 @@ Player.inherit(nodes.Node, {
         }
 
         // Apply forward force..
-        if(this.keys.UP) {
+        if(this.keys.UP && this.fuel > 0) {
             var rotInRadians = (-this.rotation + 90) * (Math.PI / 180.0);
             var force = ccp( Math.cos(rotInRadians) * this.moveSpeed * dt,
                              Math.sin(rotInRadians) * this.moveSpeed * dt );
             this.acceleration = geo.ccpAdd(this.acceleration, force);
+            this.fuel--;
+        } else {
+            // Regenerate fuel.
+            if(this.fuel < this.maxFuel) {
+                this.fuel += this.fuelRegen;
+            }
         }
 
         // Turn right or left.
@@ -109,14 +120,21 @@ Player.inherit(nodes.Node, {
         }
 
         // Apply gravity.
-        this.velocity.y -= 7.5 * dt;
+        //this.velocity.y -= 7.5 * dt;
 
         // Apply acceleration to velocity.
         this.velocity = geo.ccpAdd(this.velocity, this.acceleration);
 
         // Simulate air drag.
-        this.velocity.x *= 0.99;
-        this.velocity.y *= 0.99;
+        this.velocity.x *= this.airDrag;
+        this.velocity.y *= this.airDrag;
+
+        // Cap velocity at some maximum.
+        var speed = Math.sqrt( this.velocity.x*this.velocity.x + this.velocity.y*this.velocity.y );
+        if(speed > this.maxSpeed) {
+            this.velocity.x = (this.velocity.x / speed) * this.maxSpeed;
+            this.velocity.y = (this.velocity.y / speed) * this.maxSpeed;
+        }
 
         // Apply velocity to position.
         this.position = geo.ccpAdd(this.position, this.velocity);

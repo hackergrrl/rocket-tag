@@ -38,6 +38,7 @@ function Uwgdc () {
         file: '/resources/bg.png'
     });
     bg.anchorPoint = ccp(0,0);
+    bg.zOrder = -1;
     this.addChild(bg);
 
     // For future reference in connection callbacks.
@@ -88,11 +89,15 @@ function Uwgdc () {
                 player.sprite.textureAtlas = new cocos.TextureAtlas({
                     file: '/resources/plr_tagged.png'
                 });
+                player.maxFuel = 200;
+                player.fuelRegen = 0.75;
             } else {
                 console.log('not tagged');
                 player.sprite.textureAtlas = new cocos.TextureAtlas({
                     file: '/resources/plr_normal.png'
                 });
+                player.maxFuel = 60;
+                player.fuelRegen = 0.25;
             }
 
         }
@@ -125,6 +130,17 @@ Uwgdc.inherit(Layer, {
             this.connection.sendPlayerStatus(this.player);
 
             this.playerUpdateAccum = 0;
+        }
+    },
+
+    draw: function(ctx) {
+        Uwgdc.superclass.draw.call(this, ctx);
+
+        if(this.player) {
+            ctx.save();
+            ctx.fillStyle = "#FF00FF";
+            ctx.fillRect(5,5, this.player.fuel*3,32);
+            ctx.restore();
         }
     }
 });
