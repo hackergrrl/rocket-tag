@@ -10,9 +10,31 @@ console.log('Game sockets server running on port 8081');
 var playerCount = 0;
 var players = {};
 var tagged = null;
+var tagCooldown = 0;
 
 // Send player status updates periodically.
 setInterval( function() {
+    // Check if the tagged player is touching another player.
+    tagCooldown--;
+    if(tagged && tagCooldown <= 0) {
+        for(var networkID in players) {
+            if(networkID != tagged.networkID) {
+                var player = players[networkID];
+
+                var deltaX = player.pos[0] - tagged.pos[0];
+                var deltaY = player.pos[1] - tagged.pos[1];
+                var distance = Math.sqrt( deltaX*deltaX + deltaY*deltaY );
+                if(distance < 20) {
+                    console.log(tagged.networkID + " transferred taggedness to " + player.networkID);
+                    tagged = player;
+                    tagCooldown = 5;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Broadcast player updates.
     io.sockets.clients().forEach( function(socket) {
         var data = { players: [] };
         for(var networkID in players) {
@@ -99,7 +121,7 @@ io.sockets.on('connection', function (socket) {
 /* Set up static file server. */
 http.createServer(function (request, response) {
     console.log('Request: ' + JSON.stringify(request.url, null, 4));
-    var filePath = '../build' + request.url;
+    var filePath = request.url;
     if (filePath == './')
         filePath = './index.html';
     var extname = path.extname(filePath);
