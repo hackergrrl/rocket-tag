@@ -71,7 +71,7 @@ io.sockets.on('connection', function (socket) {
         // Inform the other players of this player's removal.
         console.log(socket.player.networkID + " has disconnected.");
         var data = { 'networkID': socket.player.networkID };
-        socket.broadcast.emit('removeProp', data);
+        socket.broadcast.emit('removePlayer', data);
         delete players[socket.player.networkID];
     });
 });

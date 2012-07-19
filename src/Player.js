@@ -109,9 +109,7 @@ Player.inherit(nodes.Node, {
         }
 
         // Apply gravity.
-        if(this.isLocal) {
-        this.acceleration.y -= 7.5 * dt;
-        }
+        this.velocity.y -= 7.5 * dt;
 
         // Apply acceleration to velocity.
         this.velocity = geo.ccpAdd(this.velocity, this.acceleration);
