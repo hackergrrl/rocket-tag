@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>Uwgdc</title>
+        <title>Rocket Tag</title>
         <style type="text/css" media="screen">
             body {
                 font-family: Helvetica, Arial, sans-serif;
@@ -27,7 +27,7 @@
         </style>
     </head>
     <body>
-        <h1>UW Game Development Club</h1>
+        <h1>Rocket Tag!</h1>
         <div class="cocos2d-app">
             Now Loading...
             ${scripts}

@@ -23,9 +23,9 @@ var players = {};
  * @class Initial application layer
  * @extends cocos.nodes.Layer
  */
-function Uwgdc () {
+function RocketTag () {
     // You must always call the super class constructor
-    Uwgdc.superclass.constructor.call(this);
+    RocketTag.superclass.constructor.call(this);
 
     // Listen for keyboard input.
     this.isKeyboardEnabled = true;
@@ -110,7 +110,7 @@ function Uwgdc () {
 }
 
 // Inherit from cocos.nodes.Layer
-Uwgdc.inherit(Layer, {
+RocketTag.inherit(Layer, {
 
     keyDown: function(evt) {
         var key = evt.keyCode;
@@ -134,7 +134,7 @@ Uwgdc.inherit(Layer, {
     },
 
     draw: function(ctx) {
-        Uwgdc.superclass.draw.call(this, ctx);
+        RocketTag.superclass.draw.call(this, ctx);
 
         if(this.player) {
             ctx.save();
@@ -158,7 +158,7 @@ function main () {
     events.addListener(director, 'ready', function (director) {
         // Create a scene and layer
         var scene = new Scene(),
-            layer = new Uwgdc();
+            layer = new RocketTag();
 
         // Add our layer to the scene
         scene.addChild(layer);
