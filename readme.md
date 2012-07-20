@@ -14,6 +14,6 @@ In short: after building the project, copy `server.js` from src/ into build/, an
 
 How-to: Client
 ===============
-TODO: This _very_ obnoxious, and a script should be written to make it simpler. Currently it requires modifying the source of Cocos2D to include Socket.IO in the list of scripts to include, which is nasty and ugly and awful and you really shouldn't have to be subjected to it.
+TODO: This _very_ obnoxious, and a script should be written to make it simpler. Currently it requires either modifying the source of Cocos2D to include Socket.IO, or manually editting the `init.js` script repeatedly. These are nasty and ugly and awful and you really shouldn't have to be subjected to it.
 
 For those of you who are brave enough, you'll need to open `build/uwgdc/init.js` and manually add `"uwgdc/socket.io.js"` to the `scripts` var at the top to have it properly included. You will also need to copy the `socket.io.js` file into the `build/uwgdc/` directory. I'm so, so sorry for this.
