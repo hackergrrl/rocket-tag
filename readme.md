@@ -18,6 +18,3 @@ TODO: This _very_ obnoxious, and a script should be written to make it simpler. 
 
 For those of you who are brave enough, you'll need to open `build/rocket_tag/init.js` and manually add `"rocket_tag/socket.io.js"` to the `scripts` var at the top to have it properly included. You will also need to copy the `socket.io.js` file into the `build/rocket_tag/` directory. I'm so, so sorry for this.
 
-Can I Just Play It, Please?
-============================
-Yes yes, of course. You can just play the darn thing [here](http://www.stephenwhitmore.com/UWGDC/game/).
