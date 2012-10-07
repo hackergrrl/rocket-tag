@@ -5,6 +5,7 @@ var cocos  = require('cocos2d')
   , geo    = require('geometry')  // Import the geometry module
   , ccp    = geo.ccp              // Short hand to create points
   , Player = require('/Player');
+var io = require('./socket.io');
 
 
 function Connection(address) {
