@@ -114,12 +114,16 @@ RocketTag.inherit(Layer, {
 
     keyDown: function(evt) {
         var key = evt.keyCode;
-        this.player.keyDown(key);
+        if(this.player) {
+            this.player.keyDown(key);
+        }
     },
 
     keyUp: function(evt) {
         var key = evt.keyCode;
-        this.player.keyUp(key);
+        if(this.player) {
+            this.player.keyUp(key);
+        }
     },
 
     update: function(dt) {
