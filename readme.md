@@ -8,11 +8,11 @@ Rocket Tag relies on [Cocos2D-JS](https://github.com/RyanWilliams/cocos2d-javasc
 
 Server
 =======
-Setup: `npm install socket.io`.
-Run: `node server.js` from `src/`.
+Install the server-side flavour of Socket.IO using `npm install socket.io`. To run, simply execute `node server.js` from `src/`.
 
 Client
 =======
-Setup: `npm install cocos2d@0.2.0-beta`. `cocos make` in the home directory to build.
-Run: Open `build/index.html` to connect to the running server.
+`npm install -g` in the main directory to install all client dependencies, then `cocos make` to build.
+
+To test locally, open `build/index.html` in your browser of choice.
 
